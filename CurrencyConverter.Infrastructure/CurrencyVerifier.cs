@@ -10,7 +10,8 @@ namespace CurrencyConverter.Infrastructure
             using (var db = new CurrencyConverterContext())
             {
                 var rateValue = db.Rates.FirstOrDefault(r
-                    => currency.Equals(r.Currency));
+                    => currency.Equals(r.Currency)
+                    || currency.Equals(r.TargetCurrency));
                 return rateValue != null;
             }
         }

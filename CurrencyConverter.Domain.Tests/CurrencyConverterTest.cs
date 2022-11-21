@@ -35,6 +35,7 @@ namespace CurrencyConverter.Domain.Tests
             rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
+            currencyVerifier.Verify(usdCurrency).Returns(true);
             Converter converter = new Converter(rates, currencyVerifier);
 
             decimal convertedAmount = converter.Convert(amount, currency, usdCurrency);
@@ -54,6 +55,7 @@ namespace CurrencyConverter.Domain.Tests
             rates.GetRateOf(currency, eurCurrency).Returns(eurUsdRate);
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
+            currencyVerifier.Verify(eurCurrency).Returns(true);
             Converter converter = new Converter(rates, currencyVerifier);
 
             decimal convertedAmount = converter.Convert(amount, currency, eurCurrency);
@@ -73,6 +75,22 @@ namespace CurrencyConverter.Domain.Tests
             Converter converter = new Converter(rates, currencyVerifier);
 
             Check.ThatCode(() => converter.Convert(amount, currency, currency))
+                 .Throws<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        public void Should_not_convert_when_target_currency_is_invalid()
+        {
+            string currency = "CAD";
+            string eurCurrency = "EUR";
+            decimal amount = 10;
+            IRates rates = Substitute.For<IRates>();
+            ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(true);
+            currencyVerifier.Verify(eurCurrency).Returns(false);
+            Converter converter = new Converter(rates, currencyVerifier);
+
+            Check.ThatCode(() => converter.Convert(amount, currency, eurCurrency))
                  .Throws<InvalidOperationException>();
         }
     }

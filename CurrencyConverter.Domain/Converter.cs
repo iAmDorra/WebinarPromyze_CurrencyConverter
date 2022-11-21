@@ -17,14 +17,17 @@ namespace CurrencyConverter.Domain
         {
             if (currencyVerifier.Verify(sourceCurrency))
             {
-                decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
-                if (sourceCurrency.Equals(targetCurrency))
+                if (currencyVerifier.Verify(targetCurrency))
                 {
-                    return amount;
-                }
+                    decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
+                    if (sourceCurrency.Equals(targetCurrency))
+                    {
+                        return amount;
+                    }
 
-                var convertedValue = amount * conversionRate;
-                return convertedValue;
+                    var convertedValue = amount * conversionRate;
+                    return convertedValue;
+                }
             }
 
             throw new InvalidOperationException();
