@@ -16,7 +16,8 @@ namespace CurrencyConverter.Domain.Tests
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
-            Converter converter = new Converter(rates, currencyVerifier);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
             decimal convertedAmount = converter.Convert(amount, currency, currency);
 
@@ -36,7 +37,8 @@ namespace CurrencyConverter.Domain.Tests
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
             currencyVerifier.Verify(usdCurrency).Returns(true);
-            Converter converter = new Converter(rates, currencyVerifier);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
             decimal convertedAmount = converter.Convert(amount, currency, usdCurrency);
 
@@ -56,7 +58,8 @@ namespace CurrencyConverter.Domain.Tests
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
             currencyVerifier.Verify(eurCurrency).Returns(true);
-            Converter converter = new Converter(rates, currencyVerifier);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
             decimal convertedAmount = converter.Convert(amount, currency, eurCurrency);
 
@@ -72,7 +75,8 @@ namespace CurrencyConverter.Domain.Tests
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(false);
-            Converter converter = new Converter(rates, currencyVerifier);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
             Check.ThatCode(() => converter.Convert(amount, currency, currency))
                  .Throws<InvalidOperationException>();
@@ -88,7 +92,8 @@ namespace CurrencyConverter.Domain.Tests
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
             currencyVerifier.Verify(eurCurrency).Returns(false);
-            Converter converter = new Converter(rates, currencyVerifier);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
             Check.ThatCode(() => converter.Convert(amount, currency, eurCurrency))
                  .Throws<InvalidOperationException>();
@@ -106,12 +111,32 @@ namespace CurrencyConverter.Domain.Tests
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
             currencyVerifier.Verify(usdCurrency).Returns(true);
-            Converter converter = new Converter(rates, currencyVerifier);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
             Check.ThatCode(() => converter.Convert(amount, currency, usdCurrency))
                  .Throws<InvalidOperationException>();
         }
 
+        [TestMethod]
+        public void Should_log_every_conversion()
+        {
+            string currency = "EUR";
+            string usdCurrency = "USD";
+            decimal amount = 12;
+            IRates rates = Substitute.For<IRates>();
+            decimal eurUsdRate = 1.14m;
+            rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);
+            ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(true);
+            currencyVerifier.Verify(usdCurrency).Returns(true);
+            var logger = Substitute.For<ILogger>();
+            Converter converter = new Converter(rates, currencyVerifier, logger);
 
+            converter.Convert(amount, currency, usdCurrency);
+
+            logger.Received()
+                .Log(Arg.Any<DateTime>(), currency, usdCurrency, eurUsdRate);
+        }
     }
 }

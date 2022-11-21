@@ -6,11 +6,13 @@ namespace CurrencyConverter.Domain
     {
         private readonly IRates _rates;
         private readonly ICurrencyVerifier currencyVerifier;
+        private ILogger logger;
 
-        public Converter(IRates rates, ICurrencyVerifier currencyVerifier)
+        public Converter(IRates rates, ICurrencyVerifier currencyVerifier, ILogger logger)
         {
             _rates = rates;
             this.currencyVerifier = currencyVerifier;
+            this.logger = logger;
         }
 
         public decimal Convert(decimal amount, string sourceCurrency, string targetCurrency)
@@ -30,6 +32,7 @@ namespace CurrencyConverter.Domain
                         return amount;
                     }
 
+                    logger.Log(DateTime.Now, sourceCurrency, targetCurrency, conversionRate);
                     var convertedValue = amount * conversionRate;
                     return convertedValue;
                 }
