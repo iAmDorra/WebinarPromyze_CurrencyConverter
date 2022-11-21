@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NFluent;
 using NSubstitute;
+using System;
 
 namespace CurrencyConverter.Domain.Tests
 {
@@ -14,6 +15,7 @@ namespace CurrencyConverter.Domain.Tests
             decimal amount = 10;
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(true);
             Converter converter = new Converter(rates, currencyVerifier);
 
             decimal convertedAmount = converter.Convert(amount, currency, currency);
@@ -32,6 +34,7 @@ namespace CurrencyConverter.Domain.Tests
             decimal eurUsdRate = 1.14m;
             rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(true);
             Converter converter = new Converter(rates, currencyVerifier);
 
             decimal convertedAmount = converter.Convert(amount, currency, usdCurrency);
@@ -50,12 +53,27 @@ namespace CurrencyConverter.Domain.Tests
             decimal eurUsdRate = 0.005134m;
             rates.GetRateOf(currency, eurCurrency).Returns(eurUsdRate);
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(true);
             Converter converter = new Converter(rates, currencyVerifier);
 
             decimal convertedAmount = converter.Convert(amount, currency, eurCurrency);
 
             decimal expectedAmount = 0.077010m;
             Check.That(convertedAmount).IsEqualTo(expectedAmount);
+        }
+
+        [TestMethod]
+        public void Should_not_convert_when_source_currency_is_invalid()
+        {
+            string currency = "EUR";
+            decimal amount = 10;
+            IRates rates = Substitute.For<IRates>();
+            ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(false);
+            Converter converter = new Converter(rates, currencyVerifier);
+
+            Check.ThatCode(() => converter.Convert(amount, currency, currency))
+                 .Throws<InvalidOperationException>();
         }
     }
 }

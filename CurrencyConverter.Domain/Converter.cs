@@ -15,14 +15,19 @@ namespace CurrencyConverter.Domain
 
         public decimal Convert(decimal amount, string sourceCurrency, string targetCurrency)
         {
-            decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
-            if (sourceCurrency.Equals(targetCurrency))
+            if (currencyVerifier.Verify(sourceCurrency))
             {
-                return amount;
+                decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
+                if (sourceCurrency.Equals(targetCurrency))
+                {
+                    return amount;
+                }
+
+                var convertedValue = amount * conversionRate;
+                return convertedValue;
             }
 
-            var convertedValue = amount * conversionRate;
-            return convertedValue;
+            throw new InvalidOperationException();
         }
     }
 }
