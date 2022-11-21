@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <H2>
+        Input the amount in euro and the target currency and convert
+    </H2>
+    <form asp-controller="Home" method="post">
+        <div class="form-group row">
+            <label for="Amount" class="col-md-2 control-label">Amount in EUR :</label>
+            <input class="form-control" id="Amount" name="Amount" type="text" value="@ViewData["Amount"]" />
+        </div>
+        <div class="form-group row">
+            <label for="Currency" class="col-md-2 control-label">Target currency:</label>
+            <input class="form-control" id="Currency" name="Currency" type="text" value="@ViewData["Currency"]" />
+        </div>
+
+        <div class="form-group row">
+            <input type="submit" asp-action="Convert" formmethod="post" class="btn btn-success" value="Convert" />
+        </div>
+
+        <div class="form-group row">
+            <label for="ConvertedAmount" class="col-md-2 control-label">Converted amount:</label>
+            <input class="form-control" id="ConvertedAmount" name="ConvertedAmount" type="text" value="@ViewData["ConvertedAmount"]" />
+        </div>
+    </form>
+</div>
