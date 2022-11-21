@@ -19,6 +19,11 @@ namespace CurrencyConverter.Domain
             {
                 if (currencyVerifier.Verify(targetCurrency))
                 {
+                    if(amount < 0)
+                    {
+                        throw new InvalidOperationException();
+                    }
+
                     decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
                     if (sourceCurrency.Equals(targetCurrency))
                     {

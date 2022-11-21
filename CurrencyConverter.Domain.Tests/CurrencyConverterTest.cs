@@ -93,5 +93,25 @@ namespace CurrencyConverter.Domain.Tests
             Check.ThatCode(() => converter.Convert(amount, currency, eurCurrency))
                  .Throws<InvalidOperationException>();
         }
+
+        [TestMethod]
+        public void Should_not_convert_when_the_amount_is_negative()
+        {
+            string currency = "EUR";
+            string usdCurrency = "USD";
+            decimal amount = -12;
+            IRates rates = Substitute.For<IRates>();
+            decimal eurUsdRate = 1.14m;
+            rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);
+            ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
+            currencyVerifier.Verify(currency).Returns(true);
+            currencyVerifier.Verify(usdCurrency).Returns(true);
+            Converter converter = new Converter(rates, currencyVerifier);
+
+            Check.ThatCode(() => converter.Convert(amount, currency, usdCurrency))
+                 .Throws<InvalidOperationException>();
+        }
+
+
     }
 }
