@@ -12,16 +12,16 @@ namespace CurrencyConverter.Domain.Tests
         public void Should_return_the_same_amount_when_target_currency_is_same()
         {
             Currency currency = new Currency("EUR");
-            decimal amount = 10;
+            Amount amount = new Amount(10);
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
             var logger = Substitute.For<ILogger>();
             Converter converter = new Converter(rates, currencyVerifier, logger);
 
-            decimal convertedAmount = converter.Convert(amount, currency, currency);
+            var convertedAmount = converter.Convert(amount, currency, currency);
 
-            decimal expectedAmount = 10;
+            var expectedAmount = new Amount(10);
             Check.That(convertedAmount).IsEqualTo(expectedAmount);
         }
 
@@ -30,7 +30,7 @@ namespace CurrencyConverter.Domain.Tests
         {
             Currency currency = new Currency("EUR");
             Currency usdCurrency = new Currency("USD");
-            decimal amount = 10;
+            Amount amount = new Amount(10);
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 1.14m;
             rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);
@@ -40,9 +40,9 @@ namespace CurrencyConverter.Domain.Tests
             var logger = Substitute.For<ILogger>();
             Converter converter = new Converter(rates, currencyVerifier, logger);
 
-            decimal convertedAmount = converter.Convert(amount, currency, usdCurrency);
+            var convertedAmount = converter.Convert(amount, currency, usdCurrency);
 
-            decimal expectedAmount = 11.4m;
+            var expectedAmount = new Amount(11.4m);
             Check.That(convertedAmount).IsEqualTo(expectedAmount);
         }
 
@@ -51,7 +51,7 @@ namespace CurrencyConverter.Domain.Tests
         {
             Currency currency = new Currency("CAD");
             Currency eurCurrency = new Currency("EUR");
-            decimal amount = 15;
+            Amount amount = new Amount(15);
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 0.005134m;
             rates.GetRateOf(currency, eurCurrency).Returns(eurUsdRate);
@@ -61,9 +61,9 @@ namespace CurrencyConverter.Domain.Tests
             var logger = Substitute.For<ILogger>();
             Converter converter = new Converter(rates, currencyVerifier, logger);
 
-            decimal convertedAmount = converter.Convert(amount, currency, eurCurrency);
+            var convertedAmount = converter.Convert(amount, currency, eurCurrency);
 
-            decimal expectedAmount = 0.077010m;
+            var expectedAmount = new Amount(0.077010m);
             Check.That(convertedAmount).IsEqualTo(expectedAmount);
         }
 
@@ -71,7 +71,7 @@ namespace CurrencyConverter.Domain.Tests
         public void Should_not_convert_when_source_currency_is_invalid()
         {
             Currency currency = new Currency("EUR");
-            decimal amount = 10;
+            Amount amount = new Amount(10);
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(false);
@@ -87,7 +87,7 @@ namespace CurrencyConverter.Domain.Tests
         {
             Currency currency = new Currency("CAD");
             Currency eurCurrency = new Currency("EUR");
-            decimal amount = 10;
+            Amount amount = new Amount(10);
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
             currencyVerifier.Verify(currency).Returns(true);
@@ -104,7 +104,7 @@ namespace CurrencyConverter.Domain.Tests
         {
             Currency currency = new Currency("EUR");
             Currency usdCurrency = new Currency("USD");
-            decimal amount = -12;
+            Amount amount = new Amount(-12);
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 1.14m;
             rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);
@@ -123,7 +123,7 @@ namespace CurrencyConverter.Domain.Tests
         {
             Currency currency = new Currency("EUR");
             Currency usdCurrency = new Currency("USD");
-            decimal amount = 12;
+            Amount amount = new Amount(12);
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 1.14m;
             rates.GetRateOf(currency, usdCurrency).Returns(eurUsdRate);

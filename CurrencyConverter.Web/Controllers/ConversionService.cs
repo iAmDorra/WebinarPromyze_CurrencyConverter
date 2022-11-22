@@ -8,7 +8,7 @@ namespace CurrencyConverter.Web.Controllers
         public string Convert(string amountValue, string currencyName)
         {
             var converter = new Converter(new Rates(), new CurrencyVerifier(), new Logger());
-            decimal amount = decimal.Parse(amountValue);
+            var amount = new Amount(decimal.Parse(amountValue));
             var eurCurrency = new Currency("EUR");
             Currency targetCurrency = new Currency(currencyName);
             var convertedAmount = converter.Convert(amount, eurCurrency, targetCurrency);

@@ -15,7 +15,7 @@ namespace CurrencyConverter.Domain
             this.logger = logger;
         }
 
-        public decimal Convert(decimal amount, Currency sourceCurrency, Currency targetCurrency)
+        public Amount Convert(Amount amount, Currency sourceCurrency, Currency targetCurrency)
         {
             if (!currencyVerifier.Verify(sourceCurrency))
             {
@@ -27,7 +27,7 @@ namespace CurrencyConverter.Domain
                 throw new InvalidOperationException();
             }
 
-            if (amount < 0)
+            if (amount.IsNegative())
             {
                 throw new InvalidOperationException();
             }
@@ -39,7 +39,7 @@ namespace CurrencyConverter.Domain
 
             decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
             logger.Log(DateTime.Now, sourceCurrency, targetCurrency, conversionRate);
-            var convertedValue = amount * conversionRate;
+            var convertedValue = amount.MultiplyBy(conversionRate);
             return convertedValue;
         }
     }
