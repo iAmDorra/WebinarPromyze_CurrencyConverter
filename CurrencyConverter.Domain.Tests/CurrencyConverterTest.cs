@@ -11,7 +11,7 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_return_the_same_amount_when_target_currency_is_same()
         {
-            string currency = "EUR";
+            Currency currency = new Currency("EUR");
             decimal amount = 10;
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
@@ -28,8 +28,8 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_convert_the_amount_when_target_currency_is_different()
         {
-            string currency = "EUR";
-            string usdCurrency = "USD";
+            Currency currency = new Currency("EUR");
+            Currency usdCurrency = new Currency("USD");
             decimal amount = 10;
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 1.14m;
@@ -49,8 +49,8 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_convert_the_amount_when_target_currency_is_different_triangulation()
         {
-            string currency = "CAD";
-            string eurCurrency = "EUR";
+            Currency currency = new Currency("CAD");
+            Currency eurCurrency = new Currency("EUR");
             decimal amount = 15;
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 0.005134m;
@@ -70,7 +70,7 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_not_convert_when_source_currency_is_invalid()
         {
-            string currency = "EUR";
+            Currency currency = new Currency("EUR");
             decimal amount = 10;
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
@@ -85,8 +85,8 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_not_convert_when_target_currency_is_invalid()
         {
-            string currency = "CAD";
-            string eurCurrency = "EUR";
+            Currency currency = new Currency("CAD");
+            Currency eurCurrency = new Currency("EUR");
             decimal amount = 10;
             IRates rates = Substitute.For<IRates>();
             ICurrencyVerifier currencyVerifier = Substitute.For<ICurrencyVerifier>();
@@ -102,8 +102,8 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_not_convert_when_the_amount_is_negative()
         {
-            string currency = "EUR";
-            string usdCurrency = "USD";
+            Currency currency = new Currency("EUR");
+            Currency usdCurrency = new Currency("USD");
             decimal amount = -12;
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 1.14m;
@@ -121,8 +121,8 @@ namespace CurrencyConverter.Domain.Tests
         [TestMethod]
         public void Should_log_every_conversion()
         {
-            string currency = "EUR";
-            string usdCurrency = "USD";
+            Currency currency = new Currency("EUR");
+            Currency usdCurrency = new Currency("USD");
             decimal amount = 12;
             IRates rates = Substitute.For<IRates>();
             decimal eurUsdRate = 1.14m;

@@ -2,6 +2,6 @@
 {
     public interface IRates
     {
-        decimal GetRateOf(string currency, string targetCurrency);
+        decimal GetRateOf(Currency currency, Currency targetCurrency);
     }
 }

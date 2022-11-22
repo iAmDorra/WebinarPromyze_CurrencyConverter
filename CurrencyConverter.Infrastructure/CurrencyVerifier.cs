@@ -5,13 +5,13 @@ namespace CurrencyConverter.Infrastructure
 {
     public class CurrencyVerifier : ICurrencyVerifier
     {
-        public bool Verify(string currency)
+        public bool Verify(Currency currency)
         {
             using (var db = new CurrencyConverterContext())
             {
                 var rateValue = db.Rates.FirstOrDefault(r
-                    => currency.Equals(r.Currency)
-                    || currency.Equals(r.TargetCurrency));
+                    => currency.Is(r.Currency)
+                    || currency.Is(r.TargetCurrency));
                 return rateValue != null;
             }
         }

@@ -4,6 +4,6 @@ namespace CurrencyConverter.Domain
 {
     public interface ILogger
     {
-        void Log(DateTime dateTime, string sourceCurrency, string targetCurrency, decimal conversionRate);
+        void Log(DateTime dateTime, Currency sourceCurrency, Currency targetCurrency, decimal conversionRate);
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ICurrencyVerifier
     {
-        bool Verify(string currency);
+        bool Verify(Currency currency);
     }
 }

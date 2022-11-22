@@ -15,7 +15,7 @@ namespace CurrencyConverter.Domain
             this.logger = logger;
         }
 
-        public decimal Convert(decimal amount, string sourceCurrency, string targetCurrency)
+        public decimal Convert(decimal amount, Currency sourceCurrency, Currency targetCurrency)
         {
             if (!currencyVerifier.Verify(sourceCurrency))
             {
