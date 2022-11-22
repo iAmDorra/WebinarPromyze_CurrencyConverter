@@ -32,12 +32,12 @@ namespace CurrencyConverter.Domain
                 throw new InvalidOperationException();
             }
 
-            decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
             if (sourceCurrency.Equals(targetCurrency))
             {
                 return amount;
             }
 
+            decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
             logger.Log(DateTime.Now, sourceCurrency, targetCurrency, conversionRate);
             var convertedValue = amount * conversionRate;
             return convertedValue;
