@@ -17,28 +17,30 @@ namespace CurrencyConverter.Domain
 
         public decimal Convert(decimal amount, string sourceCurrency, string targetCurrency)
         {
-            if (currencyVerifier.Verify(sourceCurrency))
+            if (!currencyVerifier.Verify(sourceCurrency))
             {
-                if (currencyVerifier.Verify(targetCurrency))
-                {
-                    if(amount < 0)
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
-                    if (sourceCurrency.Equals(targetCurrency))
-                    {
-                        return amount;
-                    }
-
-                    logger.Log(DateTime.Now, sourceCurrency, targetCurrency, conversionRate);
-                    var convertedValue = amount * conversionRate;
-                    return convertedValue;
-                }
+                throw new InvalidOperationException();
             }
 
-            throw new InvalidOperationException();
+            if (!currencyVerifier.Verify(targetCurrency))
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (amount < 0)
+            {
+                throw new InvalidOperationException();
+            }
+
+            decimal conversionRate = _rates.GetRateOf(sourceCurrency, targetCurrency);
+            if (sourceCurrency.Equals(targetCurrency))
+            {
+                return amount;
+            }
+
+            logger.Log(DateTime.Now, sourceCurrency, targetCurrency, conversionRate);
+            var convertedValue = amount * conversionRate;
+            return convertedValue;
         }
     }
 }
